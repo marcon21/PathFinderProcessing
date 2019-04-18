@@ -1,13 +1,14 @@
 public class Board {
   Box[][] board;
-  int w, h;
+  int w, h, t;
   float xsize, ysize;
   Box startBox, endBox;
   boolean discovered;
  
-  public Board(int w, int h) {
+  public Board(int w, int h, int t) {
     this.w = w;
     this.h = h;
+    this.t = t;
     this.discovered = false;
     board = new Box[w][h];
     
@@ -113,7 +114,7 @@ public class Board {
       }
       choosedBox = scoreBox;
       //println(choosedBox);
-      //delay(10);
+      delay(t);
       
       for (int x = -1; x < 2; x++) { 
         for (int y = -1; y < 2; y++) { 
