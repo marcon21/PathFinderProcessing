@@ -1,9 +1,8 @@
 Board bd;
 
-
 void setup() {
-  size(1200, 800);
-  bd = new Board(90, 60, 15);
+  size(1200, 900);
+  bd = new Board(80, 60, 5);
 }
 
 void draw() {

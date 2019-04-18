@@ -1,5 +1,5 @@
 public class Board {
-  Box[][] board;
+  transient Box[][] board;
   int w, h, t;
   float xsize, ysize;
   Box startBox, endBox;
@@ -63,6 +63,8 @@ public class Board {
   public void checkInteraction() {
     if (keyPressed && (key == 'r' || key == 'R')) {
         reset();
+    } else if (keyPressed && key == ENTER) {
+        findPath();
     }
       
     if (mouseX < width && mouseY < height && !discovered) {
@@ -79,8 +81,6 @@ public class Board {
         changeState(xp, yp, State.START);
       } else if (keyPressed && (key == 'e' || key == 'E')) {
         changeState(xp, yp, State.END);
-      } else if (keyPressed && key == ENTER) {
-        findPath();
       }
     }
   }
@@ -102,15 +102,16 @@ public class Board {
   
   private void chooseNeighbor(Box box) {
     boolean end = false;
-    ArrayList<Box> visitedBoxs = new ArrayList<Box>();
+    ArrayList<Box> visitedboxes = new ArrayList<Box>();
     Box scoreBox = box;
     Box choosedBox = null;
   
     while (end == false) {
       float min = Float.POSITIVE_INFINITY;
       if (choosedBox == scoreBox) {
-        visitedBoxs.remove(choosedBox);
-        scoreBox = nearestBox(visitedBoxs);
+        visitedboxes.remove(choosedBox);
+        visitedboxes = removeTrash(visitedboxes);
+        scoreBox = nearestBox(visitedboxes);
       }
       choosedBox = scoreBox;
       //println(choosedBox);
@@ -130,13 +131,13 @@ public class Board {
               
               if (n.getState() == State.EMPTY) {
                 n.setState(State.VISITED);
-                visitedBoxs.add(n);
+                visitedboxes.add(n);
 
               }
               
               float g = 1;
               float f = distanceToEndBox(n);
-              
+                
               if (abs(x) == abs(y)) {
                 g = sqrt(1 + 1);
               }
@@ -149,6 +150,7 @@ public class Board {
           }
         }
       }
+      // visitedboxes.add(scoreBox);
       scoreBox.setState(State.CHOOSED);
     }
     scoreBox.setState(State.END); 
@@ -160,11 +162,11 @@ public class Board {
     return sqrt(deltax * deltax + deltay * deltay);
   }
   
-  public Box nearestBox(ArrayList<Box> boxs) {
+  public Box nearestBox(ArrayList<Box> boxes) {
     float min = Float.POSITIVE_INFINITY;
     Box winningBox = null;
     
-    for(Box b: boxs) {
+    for(Box b: boxes) {
       float d = distanceToEndBox(b);
       if (d < min) {
         min = d;
@@ -173,16 +175,23 @@ public class Board {
     }
     
     return winningBox;
-  
   }
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  private ArrayList<Box> removeTrash(ArrayList<Box> boxes) {
+    ArrayList<Box> newArray = new ArrayList<Box>();
+    for(Box b: boxes) {
+      int bx = b.x;
+      int by = b.y;
+      for (int x = -1; x < 2; x++) { 
+        for (int y = -1; y < 2; y++) { 
+          if (board[bx + x][by + y].getState() == State.EMPTY) {
+            if (!(newArray.contains(board[bx + x][by + y]))) {
+              newArray.add(board[bx + x][by + y]);
+            }
+          }
+        }
+      }
+    }
+    return newArray;
+  }
 }
