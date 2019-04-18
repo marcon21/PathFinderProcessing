@@ -28,6 +28,10 @@ public class Box {
     }
     
     rect(x*xsize, y*ysize, xsize, ysize);
+    
+    //fill(0);
+    //textSize(6);
+    //text(""+x+" "+y, x*xsize, y*ysize); 
   }
   
   public void setState(State newState) {
