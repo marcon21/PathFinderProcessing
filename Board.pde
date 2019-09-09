@@ -110,7 +110,7 @@ public class Board {
       float min = Float.POSITIVE_INFINITY;
       if (choosedBox == scoreBox) {
         visitedboxes.remove(choosedBox);
-        visitedboxes = removeTrash(visitedboxes);
+        visitedboxes = removeDuplicatedBlocks(visitedboxes);
         scoreBox = nearestBox(visitedboxes);
       }
       choosedBox = scoreBox;
@@ -119,32 +119,34 @@ public class Board {
       
       for (int x = -1; x < 2; x++) { 
         for (int y = -1; y < 2; y++) { 
-          Box n = board[choosedBox.x + x][choosedBox.y + y];
-          if (!(x == 0 && y == 0) && n.getState() != State.CHOOSED) {
-            if (n.getState() != State.WALL){
-              if (n.x == endBox.x && n.y == endBox.y) {
-                println("founded!");
-                end = true;
-                min = -1;
-                scoreBox = n;
-              }
-              
-              if (n.getState() == State.EMPTY) {
-                n.setState(State.VISITED);
-                visitedboxes.add(n);
-
-              }
-              
-              float g = 1;
-              float f = distanceToEndBox(n);
+          if (choosedBox.x + x >= 0 && choosedBox.x + x <= this.w && choosedBox.y + y >= 0 && choosedBox.y + y <= h) {
+            Box n = board[choosedBox.x + x][choosedBox.y + y];
+            if (!(x == 0 && y == 0) && n.getState() != State.CHOOSED) {
+              if (n.getState() != State.WALL){
+                if (n.x == endBox.x && n.y == endBox.y) {
+                  println("founded!");
+                  end = true;
+                  min = -1;
+                  scoreBox = n;
+                }
                 
-              if (abs(x) == abs(y)) {
-                g = sqrt(1 + 1);
-              }
-              
-              if (g + f < min) {
-                min = g + f;
-                scoreBox = n;
+                if (n.getState() == State.EMPTY) {
+                  n.setState(State.VISITED);
+                  visitedboxes.add(n);
+
+                }
+                
+                float g = 1;
+                float f = distanceToEndBox(n);
+                  
+                if (abs(x) == abs(y)) {
+                  g = sqrt(1 + 1);
+                }
+                
+                if (g + f < min) {
+                  min = g + f;
+                  scoreBox = n;
+                }
               }
             }
           }
@@ -177,7 +179,7 @@ public class Board {
     return winningBox;
   }
   
-  private ArrayList<Box> removeTrash(ArrayList<Box> boxes) {
+  private ArrayList<Box> removeDuplicatedBlocks(ArrayList<Box> boxes) {
     ArrayList<Box> newArray = new ArrayList<Box>();
     for(Box b: boxes) {
       int bx = b.x;

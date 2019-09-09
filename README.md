@@ -8,6 +8,7 @@ A Processing implementation of A* Algorithm
 * __*Right Click*__: Delete Walls
 * __*S KEY*__: Add Starting Point
 * __*E KEY*__: Add Ending Point
+* __*R KEY*__: Restart the programm
 * __*Enter KEY*__: Search For Path
 
 
@@ -17,4 +18,4 @@ A Processing implementation of A* Algorithm
 - [ ] Improved Path Visualization
 - [ ] Save/Load board
 - [ ] Recognizing when there are no paths
-- [ ] Rename stupid functions
+
